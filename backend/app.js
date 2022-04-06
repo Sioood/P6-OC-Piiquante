@@ -4,8 +4,8 @@ const mongoose = require("mongoose");
 const app = express();
 app.use(express.json());
 
-const saucesRoute = require("./routes/sauces");
-const usersRoute = require("./routes/users");
+const saucesRoutes = require("./routes/sauces");
+const usersRoutes = require("./routes/users");
 
 mongoose
   .connect(
@@ -28,7 +28,7 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use("/api/sauces", saucesRoute);
-app.use("/api/auth", usersRoute);
+app.use("/api/sauces", saucesRoutes);
+app.use("/api/auth", usersRoutes);
 
 module.exports = app;
