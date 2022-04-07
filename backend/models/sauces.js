@@ -5,7 +5,7 @@ const modelsSauce = mongoose.Schema({
   name: { type: String, req: true },
   manufacturer: { type: String, req: true },
   description: { type: String, req: true },
-  imageUrl: { type: String, req: true },
+  imageUrl: { type: String, req: false },
   mainPepper: { type: String, req: true },
   heat: { type: Number, req: true },
   likes: { type: Number, req: true, default: 0 },

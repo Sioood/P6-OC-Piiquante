@@ -19,6 +19,7 @@ exports.getOneSauce = (req, res, next) => {
 // Create sauce
 
 exports.createSauce = (req, res, next) => {
+  console.log(req.body);
   const sauce = new Sauces({
     userId: req.body.userId,
     name: req.body.name,
@@ -29,14 +30,14 @@ exports.createSauce = (req, res, next) => {
     heat: req.body.heat,
     likes: req.body.likes,
     dislikes: req.body.dislikes,
-    userLiked: req.body.userLiked,
-    userDisliked: req.body.userDisliked
+    usersLiked: req.body.usersLiked,
+    usersDisliked: req.body.usersDisliked,
   });
   sauce
     .save()
     .then(() => {
       res.status(201).json({
-        message: "Post saved successfully!",
+        message: req.body,
       });
     })
     .catch((error) => {
@@ -47,13 +48,25 @@ exports.createSauce = (req, res, next) => {
 };
 
 exports.updateSauce = (req, res, next) => {
-  Sauces.updateOne({_id: req.params.id}, { ...req.body, _id: req.params.id})
-  .then(() => res.status(200).json({ message: "Objet modifié"}))
-  .catch(error => res.status(400).json({ error}));
+  Sauces.updateOne({ _id: req.params.id }, { ...req.body, _id: req.params.id })
+    .then(() => res.status(200).json({ message: "Objet modifié" }))
+    .catch((error) => res.status(400).json({ error }));
 };
 
 exports.deleteSauce = (req, res, next) => {
-  Sauces.deleteOne({_id: req.params.id})
-  .then(() => res.status(200).json({ message: "Objet supprimé"}))
-  .catch(error => res.status(400).json({ error}));
+  Sauces.findOne({ _id: req.params.id }).then((sauce) => {
+    if (!sauce) {
+      res.status(404).json({
+        error: new Error("No such Sauces!"),
+      });
+    }
+    if (sauce.userId !== req.auth.userId) {
+      res.status(400).json({
+        error: new Error("Unauthorized request!"),
+      });
+    }
+    Sauces.deleteOne({ _id: req.params.id })
+      .then(() => res.status(200).json({ message: "Item Deleted !" }))
+      .catch((error) => res.status(400).json({ error }));
+  });
 };

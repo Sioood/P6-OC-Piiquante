@@ -1,6 +1,8 @@
 const express = require("express");
 const router = express.Router();
 
+const auth = require('../middleware/auth');
+
 const SaucesCtrl = require("../controllers/sauces");
 
 router.get("/", SaucesCtrl.getSauces);
