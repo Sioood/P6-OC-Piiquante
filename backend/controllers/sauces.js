@@ -19,30 +19,29 @@ exports.getOneSauce = (req, res, next) => {
 // Create sauce
 
 exports.createSauce = (req, res, next) => {
-  console.log(req.body);
+  const sauceObject = JSON.parse(req.body.sauce);
+  delete sauceObject._id;
   const sauce = new Sauces({
-    userId: req.body.userId,
-    name: req.body.name,
-    manufacturer: req.body.manufacturer,
-    description: req.body.description,
-    mainPepper: req.body.mainPepper,
-    imageUrl: req.body.imageUrl,
-    heat: req.body.heat,
-    likes: req.body.likes,
-    dislikes: req.body.dislikes,
-    usersLiked: req.body.usersLiked,
-    usersDisliked: req.body.usersDisliked,
+    ...sauceObject,
+    imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
   });
   sauce
     .save()
     .then(() => {
       res.status(201).json({
-        message: req.body,
+        message: req.body.sauce,
+        message: console.log(req.body),
+        message: console.log(req.body.sauce),
+        message: "sauce créee"
       });
     })
     .catch((error) => {
       res.status(400).json({
         error: error,
+        message: req.body.sauce,
+        message: console.log(req.body),
+        message: console.log(req.body.sauce),
+        message: "sauce non créee"
       });
     });
 };
@@ -50,7 +49,7 @@ exports.createSauce = (req, res, next) => {
 exports.updateSauce = (req, res, next) => {
   Sauces.updateOne({ _id: req.params.id }, { ...req.body, _id: req.params.id })
     .then(() => res.status(200).json({ message: "Objet modifié" }))
-    .catch((error) => res.status(400).json({ error }));
+    .catch((error) => res.status(403).json({ error }));
 };
 
 exports.deleteSauce = (req, res, next) => {
