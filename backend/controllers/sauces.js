@@ -32,21 +32,22 @@ exports.createSauce = (req, res, next) => {
     .save()
     .then(() => {
       res.status(201).json({
-        message: req.body.sauce,
-        message: console.log(req.body),
-        message: console.log(req.body.sauce),
         message: "sauce créee",
       });
     })
     .catch((error) => {
       res.status(400).json({
         error: error,
-        message: req.body.sauce,
-        message: console.log(req.body),
-        message: console.log(req.body.sauce),
         message: "sauce non créee",
       });
     });
+};
+
+exports.likeSauce = (req, res, next) => {
+  Sauces.findOne({ _id: req.params.id })
+  .then((sauce) => {
+    // check user id -> check if already like or dislike -> sum of likes + (-1, 0, 1)
+  })
 };
 
 exports.modifySauce = (req, res, next) => {
