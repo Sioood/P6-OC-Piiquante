@@ -12,6 +12,8 @@ app.use(bodyParser.urlencoded({
 }));
 app.use(express.urlencoded({extended:true}));
 app.use(helmet());
+// Removes the X-Powered-By header if it was set.
+app.use(helmet.hidePoweredBy());
 
 const path = require('path');
 
