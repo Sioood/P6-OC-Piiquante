@@ -59,19 +59,25 @@ exports.modifySauce = (req, res, next) => {
 };
 
 exports.deleteSauce = (req, res, next) => {
-  Sauces.findOne({ _id: req.params.id }).then((sauce) => {
-    if (!sauce) {
-      res.status(404).json({
-        error: new Error("No such Sauces!"),
+  Sauces.findOne({ _id: req.params.id })
+    .then((sauce) => {
+      if (!sauce) {
+        res.status(404).json({
+          error: new Error("No such Sauces!"),
+        });
+      }
+      if (sauce.userId !== req.auth.userId) {
+        res.status(400).json({
+          error: new Error("Unauthorized request!"),
+        });
+      }
+      Sauces.deleteOne({ _id: req.params.id });
+      const filename = sauce.imageUrl.split("/images/")[1];
+      fs.unlink(`images/${filename}`, () => {
+        Sauces.deleteOne({ _id: req.params.id })
+          .then(() => res.status(200).json({ message: "Objet supprimé !" }))
+          .catch((error) => res.status(400).json({ error }));
       });
-    }
-    if (sauce.userId !== req.auth.userId) {
-      res.status(400).json({
-        error: new Error("Unauthorized request!"),
-      });
-    }
-    Sauces.deleteOne({ _id: req.params.id })
-      .then(() => res.status(200).json({ message: "Item Deleted !" }))
-      .catch((error) => res.status(400).json({ error }));
-  });
+    })
+    .catch((error) => res.status(500).json({ error }));
 };
