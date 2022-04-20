@@ -18,6 +18,8 @@ app.use(helmet.hidePoweredBy());
 
 const path = require('path');
 
+
+// paths routes
 const saucesRoutes = require("./routes/sauces");
 const usersRoutes = require("./routes/users");
 
@@ -33,9 +35,12 @@ app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content, Accept, Content-Type, Authorization');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
+  // Header for same source helmet images
   res.setHeader('Cross-Origin-Resource-Policy', 'same-site');
   next();
 });
+
+// base route
 
 app.use("/api/sauces", saucesRoutes);
 app.use("/api/auth", usersRoutes);

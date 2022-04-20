@@ -1,6 +1,7 @@
 const http = require('http');
 const app = require('./app');
 
+// set port to 3000
 const normalizePort = val => {
   const port = parseInt(val, 10);
 
@@ -35,6 +36,7 @@ const errorHandler = error => {
   }
 };
 
+// create the server with app.js
 const server = http.createServer(app);
 
 server.on('error', errorHandler);
